@@ -190,7 +190,7 @@ DECLARE cantidad VARCHAR(255);
 END$$
 DELIMITER ;
 
-#FUNCION QUE CALCULA LAS CUOTAS
+#FUNCION QUE CALCULA LAS CUOTAS DE UNA COMPRA
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` FUNCTION `Cuotas`(PrecioLibro INT, CantidadCuotas INT) RETURNS float
@@ -286,3 +286,4 @@ CREATE TRIGGER `BEF_UPD_factventas`
 BEFORE UPDATE ON `factventas` FOR EACH ROW
 INSERT INTO `LOG_Ventas` (Fecha,Usuario_Mod,IdVenta,Valor,Tipo_Operacion)
 VALUES (NOW(),USER(),NEW.IdVenta,NEW.Valor,'UPDATE');
+
