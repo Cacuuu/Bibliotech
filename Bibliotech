@@ -1,4 +1,9 @@
+#CREACION DE TABLAS
+
 USE bibliotech;
+
+#TABLA DE LIBROS DISPONIBLES
+
 CREATE TABLE IF NOT EXISTS DimLibros(
 IdLibros INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 Titulos VARCHAR(255) NOT NULL,
@@ -6,8 +11,10 @@ Autores VARCHAR(255) NOT NULL,
 Categoria VARCHAR(255) NOT NULL,
 Año VARCHAR (255) NOT NULL,
 Editorial TEXT(255) NOT NULL,
-Precio VARCHAR(255) NOT NULL
-);
+Precio VARCHAR(255) NOT NULL);
+
+#TABLAS DE USUARIOS CREADOS
+
 CREATE TABLE IF NOT EXISTS DimUsuarios(
 IdUsuarios INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 Nombre VARCHAR(255) NOT NULL,
@@ -17,6 +24,9 @@ Telefono BIGINT NOT NULL,
 Dirección VARCHAR(255),
 DNI BIGINT NOT NULL
 );
+
+#TABLA DE EMPLEADOS 
+
 CREATE TABLE IF NOT EXISTS DimEmpleados(
 IdEmpleados INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 Nombre VARCHAR(255) NOT NULL,
@@ -27,25 +37,34 @@ Dirección Varchar(255) NOT NULL,
 Salario BIGINT NOT NULL,
 DNI BIGINT NOT NULL
 );
+
+#TABLA DE PLANES DISPONIBLES
+
 CREATE TABLE IF NOT EXISTS DimPlanes(
 IdPlanes INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 NombrePlan VARCHAR(255) NOT NULL,
 Precio Decimal(10,2)
 );
+
+#TABLA DE FECHAS  
+
 CREATE TABLE IF NOT EXISTS DimFecha(
-Fecha INT NOT NULL UNIQUE PRIMARY KEY,
+Fecha DATE NOT NULL PRIMARY KEY,
 Mes INT NOT NULL,
-NombreMes INT NOT NULL,
+NombreMes TEXT(255) NOT NULL,
 Año INT NOT NULL,
 Semana INT NOT NULL,
-DiaSemana INT NOT NULL
+DiaSemana TEXT(255) NOT NULL
 );
+
+#TABLA DE TODAS LAS VENTAS
+
 CREATE TABLE IF NOT EXISTS FactVentas(
 IdVenta INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 IdLibros INT NOT NULL,
 FOREIGN KEY (IdLibros) REFERENCES DimLibros(IdLibros),
-FechaVenta VARCHAR(255) NOT NULL,
-FOREIGN KEY (FechaVenta) REFERENCES DimFecha(Fecha),
+Fecha DATE NOT NULL,
+FOREIGN KEY (Fecha) REFERENCES DimFecha(Fecha),
 IdUsuarios INT NOT NULL,
 FOREIGN KEY (IdUsuarios) REFERENCES DimUsuarios(IdUsuarios),
 IdEmpleados INT NOT NULL,
@@ -55,3 +74,215 @@ FOREIGN KEY (IdPlanes) REFERENCES DimPlanes(IdPlanes),
 Valor DECIMAL(10,2) NOT NULL,
 MedioPago VARCHAR(255)
 );
+
+#LLENADO DE TABLAS
+
+INSERT INTO `dimempleados` (`IdEmpleados`,`Nombre`,`Email`,`Cargo`,`Telefono`,`Dirección`,`Salario`,`DNI`) VALUES (1,'Pamela_Trinidad','TrinidadTri22@gmail.com','Atencion_Al_cliente',1576230987,'Laprida_1111',52300,40987622);
+INSERT INTO `dimempleados` (`IdEmpleados`,`Nombre`,`Email`,`Cargo`,`Telefono`,`Dirección`,`Salario`,`DNI`) VALUES (2,'Marcos_Bustamante','Bustazeta@gmail.com','Desarrollador_Web',1174629972,'Simbrón_65',107100,37725776);
+INSERT INTO `dimempleados` (`IdEmpleados`,`Nombre`,`Email`,`Cargo`,`Telefono`,`Dirección`,`Salario`,`DNI`) VALUES (3,'Oscar_Luth','OscarL@gmail.com','Jefe_RR.HH.',1167259090,'Santa_Fe_552',159888,34978645);
+INSERT INTO `dimempleados` (`IdEmpleados`,`Nombre`,`Email`,`Cargo`,`Telefono`,`Dirección`,`Salario`,`DNI`) VALUES (4,'Javier_Rodriguez','JavierRodriguez21@gmail.com','Atencion_Al_cliente',1162678841,'Galvan_977',52300,43245579);
+INSERT INTO `dimempleados` (`IdEmpleados`,`Nombre`,`Email`,`Cargo`,`Telefono`,`Dirección`,`Salario`,`DNI`) VALUES (5,'Cristian_Martinez','Cristian@gmail.com','Desarrollador_Web',1164645278,'Artilleros_1602',107100,38653429);
+INSERT INTO `dimempleados` (`IdEmpleados`,`Nombre`,`Email`,`Cargo`,`Telefono`,`Dirección`,`Salario`,`DNI`) VALUES (6,'Carlos_Sosa','Carlossosa@yahoo.com','Técnico_Servidor',1166669982,'Iberá_2351',88200,37882962);
+INSERT INTO `dimempleados` (`IdEmpleados`,`Nombre`,`Email`,`Cargo`,`Telefono`,`Dirección`,`Salario`,`DNI`) VALUES (7,'Mariano_Bruschi','BruschiMatias@gmail.com','Atencion_Al_cliente',1186744812,'Escobar_1012',52300,41252062);
+
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-05-01',5,'mayo',2021,17,'Sabado');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-05-05',5,'Mayo',2021,17,'Miercoles');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-05-06',5,'Mayo',2021,17,'Jueves');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-06-11',6,'Junio',2021,23,'Viernes');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-06-12',6,'Junio',2021,23,'Sábado');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-06-19',6,'Junio',2021,24,'Sabado');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-06-23',6,'Junio',2021,24,'Miercoles');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-07-22',7,'Julio',2021,28,'Jueves');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-08-08',8,'Agosto',2021,31,'Domingo');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-08-12',8,'Agosto',2021,31,'Jueves');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-08-29',8,'Agosto',2021,34,'Domingo');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-09-08',9,'Septiembre',2021,35,'Miercoles');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-09-09',9,'Septiembre',2021,35,'Jueves');
+INSERT INTO `dimfecha` (`Fecha`,`Mes`,`NombreMes`,`Año`,`Semana`,`DiaSemana`) VALUES ('2021-09-13',9,'Septiembre',2021,36,'Lunes');
+
+INSERT INTO `dimLibros` (`IdLibros`,`Titulos`,`Autores`,`Categoria`,`Año`,`Editorial`,`Precio`) VALUES (1,'Don Quijote de la Mancha','Miguel de Cervantes','Ficción histórica','1991','Anaya','2700');
+INSERT INTO `dimLibros` (`IdLibros`,`Titulos`,`Autores`,`Categoria`,`Año`,`Editorial`,`Precio`) VALUES (2,'Historias de Nueva Orleans','William Faulkner','Novela','1985','Alfaguara','1670');
+INSERT INTO `dimLibros` (`IdLibros`,`Titulos`,`Autores`,`Categoria`,`Año`,`Editorial`,`Precio`) VALUES (3,'El Principito','Antoine Saint-Exupery','Aventura','1996','Andina','1250');
+INSERT INTO `dimLibros` (`IdLibros`,`Titulos`,`Autores`,`Categoria`,`Año`,`Editorial`,`Precio`) VALUES (4,'El Principe','Maquiavelo','Politico','1995','S.M.','1125');
+INSERT INTO `dimLibros` (`IdLibros`,`Titulos`,`Autores`,`Categoria`,`Año`,`Editorial`,`Precio`) VALUES (5,'Diplomacia','Henry Kissinger','Politico','1997','S.M.','1750');
+INSERT INTO `dimLibros` (`IdLibros`,`Titulos`,`Autores`,`Categoria`,`Año`,`Editorial`,`Precio`) VALUES (6,'Los Windsor','Kitty Kelley','Biografias','1998','Plaza & Janes','1130');
+INSERT INTO `dimLibros` (`IdLibros`,`Titulos`,`Autores`,`Categoria`,`Año`,`Editorial`,`Precio`) VALUES (7,'El corazón de la piedra','José María García López','Novela','2013','Nocturna','2000');
+INSERT INTO `dimLibros` (`IdLibros`,`Titulos`,`Autores`,`Categoria`,`Año`,`Editorial`,`Precio`) VALUES (8,'Salmos de vísperas','Esteban Hernández Castelló','Religioso','2003','Obra social de Caja de Avila','1520');
+INSERT INTO `dimLibros` (`IdLibros`,`Titulos`,`Autores`,`Categoria`,`Año`,`Editorial`,`Precio`) VALUES (9,'La música en las catedrales españolas del Siglo de Oro','Robert Stevenson','Biografias','1993','Alianza Música','1950');
+INSERT INTO `dimLibros` (`IdLibros`,`Titulos`,`Autores`,`Categoria`,`Año`,`Editorial`,`Precio`) VALUES (10,'La polifonía clásica','Samuel Rubio','Musica','1956','Biblioteca \"la ciudad de Dios\"\", Real Monasterio de El Escorial\"','1400');
+
+INSERT INTO `dimplanes` (`IdPlanes`,`NombrePlan`,`Precio`) VALUES (1,'Oro',5000.00);
+INSERT INTO `dimplanes` (`IdPlanes`,`NombrePlan`,`Precio`) VALUES (2,'Plata',4000.00);
+INSERT INTO `dimplanes` (`IdPlanes`,`NombrePlan`,`Precio`) VALUES (3,'Bronce',1500.00);
+
+INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dirección`,`DNI`) VALUES (1,'Carlos_Montana','CarlosM@gmail.com','Oro',1564642432,'Avenida_Segurola_1515',40200302);
+INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dirección`,`DNI`) VALUES (2,'Mariano_Lopez','Marian@gmail.com','Oro',1564667092,'Paris_251',38887254);
+INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dirección`,`DNI`) VALUES (3,'Fabiana_Mendez','Fabieta@outlook.com','Bronce',1164427291,'',43220951);
+INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dirección`,`DNI`) VALUES (4,'Julian_Javian','Jujavi@gmail.com','Plata',1562098722,'Reconquista_614',33925001);
+INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dirección`,`DNI`) VALUES (5,'Ignacio_Hott','IgnaH92@gmail.com','Plata',1156879206,'Chacabuco_991',39827521);
+INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dirección`,`DNI`) VALUES (6,'Jorge_Pair','JorgeP@gmail.com','Oro',1564645519,'Avenida_Monte 221',33952286);
+INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dirección`,`DNI`) VALUES (7,'Mariana_Gomez','MarianDian@gmail.com','Oro',1515628952,'Lisboa_512',38925992);
+INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dirección`,`DNI`) VALUES (8,'Lucas_Kiter','LucasKt22@outlook.com','Bronce',1598962533,'Montiel_1952',40200700);
+INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dirección`,`DNI`) VALUES (9,'Leopoldo_Mato','Leopoldo822@gmail.com','Bronce',1524864265,'Arregui_521',39254889);
+INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dirección`,`DNI`) VALUES (10,'Matias_Martin','Martineano@gmail.com','Plata',1526789241,'Campana_999',38765243);
+
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (1,10,'2021-05-01',5,1,5000.00,'VisaDebito');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (2,1,'2021-08-08',4,3,1500.00,'MercadoPago');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (3,2,'2021-09-13',2,3,1500.00,'MercadoPago');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (4,3,'2021-06-19',3,2,4000.00,'VisaCredito');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (5,9,'2021-07-22',6,1,5000.00,'Mastercard');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (6,4,'2021-06-23',2,2,4000.00,'MercadoPago');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (7,5,'2021-06-11',8,3,1500.00,'MercadoPago');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (8,8,'2021-05-05',1,3,1500.00,'VisaCredito');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (9,6,'2021-08-29',7,3,1500.00,'MercadoPago');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (10,7,'2021-08-12',2,2,4000.00,'VisaDebito');
+
+#VISTA PARA VER LAS COMPRAS DEL PLANBRONCE
+
+CREATE VIEW PlanBronce AS
+SELECT IdVenta, Valor, MedioPago
+FROM FactVentas
+WHERE Valor = 1500;
+
+#VISTA PARA ANALIZAR LAS COMPRAS POR USUARIO (Las tablas son: dimusuarios y Factventas) 
+
+CREATE VIEW ComprasUsuarios AS
+SELECT V. IdVenta AS Venta, V.Valor, U.Nombre
+FROM Bibliotech.Factventas AS V
+INNER JOIN dimusuarios AS U
+ON U.IdUsuarios = V.IdUsuarios
+ORDER BY Valor;
+
+#VISTA QUE SOLO MUESTRA EL PLAN DE CADA USUARIO 
+
+CREATE VIEW PlanUsuarios AS
+SELECT Nombre, Plan FROM Dimusuarios;
+
+#VISTA PARA VER LOS EMPLEADOS CON EL CARGO DE ATENCION AL CLIENTE
+
+CREATE VIEW EmpleadosAT AS 
+SELECT Nombre, Cargo, Salario 
+FROM Dimempleados
+WHERE Salario = 52300;
+
+#VISTA DE LAS GANANCIAS DE CADA PLAN
+
+CREATE VIEW GANANCIAPLANES AS
+SELECT V.IdPlanes, P.NombrePlan, SUM(V.Valor) AS ValorTotal
+FROM bibliotech.factventas AS V
+INNER JOIN bibliotech.dimplanes AS P
+ON V.IdPlanes = P.IdPlanes
+GROUP BY V.Valor
+ORDER BY ValorTotal DESC;
+
+#FUNCION QUE MUESTRA EN QUE PLAN SE ENCUENTRA CADA LIBRO INSERTANDO EL PRECIO DEL MISMO
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` FUNCTION `PlanLibro`(PrecioLibro INT) RETURNS varchar(255) CHARSET utf8mb4
+    NO SQL
+BEGIN
+DECLARE cantidad VARCHAR(255);
+    CASE 
+    WHEN PrecioLibro < 1300 THEN RETURN 'Bronce';
+    WHEN PrecioLibro > 1700 THEN RETURN 'Oro';
+    ELSE RETURN 'Plata';
+    END CASE;
+END$$
+DELIMITER ;
+
+#FUNCION QUE CALCULA LAS CUOTAS
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` FUNCTION `Cuotas`(PrecioLibro INT, CantidadCuotas INT) RETURNS float
+    NO SQL
+BEGIN
+	DECLARE Precioxmes FLOAT;
+    SET Precioxmes = (PrecioLibro/CantidadCuotas);
+    RETURN Precioxmes;
+END$$
+DELIMITER ;
+
+#SP PARA ORDENAR UN CAMPO ESPECÍFICO DE CUALQUIER TABLA
+
+USE `bibliotech`;
+DROP procedure IF EXISTS `Ordenar_campo`;
+DELIMITER $$
+USE `bibliotech`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Ordenar_campo`(IN campo CHAR(20), IN Tipo_Ordenamiento ENUM('ASC', 'DESC'), IN Tabla VARCHAR(255))
+BEGIN
+	IF campo <> '' THEN
+		SET @ordenar = concat(' ORDER BY ', campo);
+	ELSE
+		SET @ordenar = '';
+	END IF;
+	IF Tipo_Ordenamiento <> ' ' THEN
+    SET @tipo = CONCAT(' ', tipo_ordenamiento);
+		ELSE 
+        SET @tipo = '';
+    END IF;
+SET @clausula = CONCAT('SELECT * FROM ',Tabla,@ordenar, @tipo);
+PREPARE ejecutarSQL FROM @clausula;
+EXECUTE ejecutarSQL;
+DEALLOCATE PREPARE ejecutarSQL;
+END$$
+DELIMITER ;
+
+#SP CREA UNA TABLA QUE MUESTRA LOS USUARIOS CON PLANES MENORES, CON EL OBJETIVO DE POSTERIORMENTE OFRECERLES UN AUMENTO DE PLAN
+
+USE `bibliotech`;
+DROP procedure IF EXISTS `Planes_Menores`;
+
+DELIMITER $$
+USE `bibliotech`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Planes_Menores`()
+BEGIN
+	CREATE TABLE IF NOT EXISTS Planes_Menores(
+		IdUsuario INT PRIMARY KEY,
+        Nombre VARCHAR(255),
+        Plan VARCHAR(255));
+	TRUNCATE Planes_Menores;
+    INSERT INTO Planes_Menores(IdUsuario,Nombre,Plan)
+    SELECT IdUsuarios,Nombre,Plan FROM dimusuarios
+    WHERE Plan = 'Bronce' OR Plan= 'Plata'
+	ORDER BY 'Plan' ASC;
+END$$
+
+DELIMITER ;
+
+#CREAMOS LA TABLA DEL TRIGGER
+
+CREATE TABLE bibliotech.Movimientos_Libros (
+	Id_Movimiento INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    Fecha DATETIME NOT NULL,
+    Usuario VARCHAR(255) NOT NULL,
+    Titulos VARCHAR(255) NOT NULL,
+    Autores VARCHAR(255) NOT NULL,
+    Precio DECIMAL(10,2) NOT NULL,
+    Tipo_Operacion VARCHAR(255)
+);
+
+#CREAMOS EL TRIGGER, QUE NOS MUESTRA INFO. POST INSERCION DE LA TABLA DIMLIBROS
+
+USE bibliotech;
+CREATE TRIGGER `AFT_INS_dimlibros`
+AFTER INSERT ON `dimlibros` FOR EACH ROW
+INSERT INTO `Movimientos_Libros` (Fecha,Usuario,Titulos,Autores,Precio,Tipo_Operacion)
+VALUES (NOW(),USER(),NEW.Titulos,NEW.Autores,NEW.Precio,'INSERT');
+
+#CREAMOS OTRA TABLA PARA UN TRIGGER
+
+CREATE TABLE bibliotech.LOG_Ventas (
+	Id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    Fecha DATETIME NOT NULL,
+    Usuario_Mod VARCHAR(255) NOT NULL,
+    IdVenta INT NOT NULL,
+    Valor DECIMAL(10,2) NOT NULL,
+    Tipo_Operacion VARCHAR(255)
+);
+
+#CREAMOS EL TRIGGER QUE NOS PERMITE VER LA INFO. DE LA TABLA FACTVENTAS ANTES DE CADA MODIFICACION
+
+CREATE TRIGGER `BEF_UPD_factventas`
+BEFORE UPDATE ON `factventas` FOR EACH ROW
+INSERT INTO `LOG_Ventas` (Fecha,Usuario_Mod,IdVenta,Valor,Tipo_Operacion)
+VALUES (NOW(),USER(),NEW.IdVenta,NEW.Valor,'UPDATE');
