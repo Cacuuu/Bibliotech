@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT exists bibliotech;
+
 #CREACION DE TABLAS
 
 USE bibliotech;
@@ -126,16 +128,16 @@ INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dire
 INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dirección`,`DNI`) VALUES (9,'Leopoldo_Mato','Leopoldo822@gmail.com','Bronce',1524864265,'Arregui_521',39254889);
 INSERT INTO `dimUsuarios` (`IdUsuarios`,`Nombre`,`Email`,`Plan`,`Telefono`,`Dirección`,`DNI`) VALUES (10,'Matias_Martin','Martineano@gmail.com','Plata',1526789241,'Campana_999',38765243);
 
-INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (1,10,'2021-05-01',5,1,5000.00,'VisaDebito');
-INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (2,1,'2021-08-08',4,3,1500.00,'MercadoPago');
-INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (3,2,'2021-09-13',2,3,1500.00,'MercadoPago');
-INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (4,3,'2021-06-19',3,2,4000.00,'VisaCredito');
-INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (5,9,'2021-07-22',6,1,5000.00,'Mastercard');
-INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (6,4,'2021-06-23',2,2,4000.00,'MercadoPago');
-INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (7,5,'2021-06-11',8,3,1500.00,'MercadoPago');
-INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (8,8,'2021-05-05',1,3,1500.00,'VisaCredito');
-INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (9,6,'2021-08-29',7,3,1500.00,'MercadoPago');
-INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (10,7,'2021-08-12',2,2,4000.00,'VisaDebito');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdEmpleados`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (1,10,'2021-05-01',5,1,1,5000.00,'VisaDebito');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdEmpleados`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (2,1,'2021-08-08',4,2,3,1500.00,'MercadoPago');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdEmpleados`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (3,2,'2021-09-13',2,3,3,1500.00,'MercadoPago');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdEmpleados`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (4,3,'2021-06-19',3,4,2,4000.00,'VisaCredito');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdEmpleados`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (5,9,'2021-07-22',6,5,1,5000.00,'Mastercard');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdEmpleados`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (6,4,'2021-06-23',2,6,2,4000.00,'MercadoPago');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdEmpleados`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (7,5,'2021-06-11',8,7,3,1500.00,'MercadoPago');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdEmpleados`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (8,8,'2021-05-05',1,5,3,1500.00,'VisaCredito');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdEmpleados`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (9,6,'2021-08-29',7,4,3,1500.00,'MercadoPago');
+INSERT INTO `factventas` (`IdVenta`,`IdLibros`,`Fecha`,`IdUsuarios`,`IdEmpleados`,`IdPlanes`,`Valor`,`MedioPago`) VALUES (10,7,'2021-08-12',2,3,2,4000.00,'VisaDebito');
 
 #VISTA PARA VER LAS COMPRAS DEL PLANBRONCE
 
@@ -178,28 +180,50 @@ ORDER BY ValorTotal DESC;
 #FUNCION QUE MUESTRA EN QUE PLAN SE ENCUENTRA CADA LIBRO INSERTANDO EL PRECIO DEL MISMO
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` FUNCTION `PlanLibro`(PrecioLibro INT) RETURNS varchar(255) CHARSET utf8mb4
+
+CREATE DEFINER=`Cacu`@`%` FUNCTION `PlanLibro`(PrecioLibro INT) RETURNS varchar(255) CHARSET utf8mb4
     NO SQL
 BEGIN
-DECLARE cantidad VARCHAR(255);
+    DECLARE cantidad VARCHAR(255);
+    
     CASE 
-    WHEN PrecioLibro < 1300 THEN RETURN 'Bronce';
-    WHEN PrecioLibro > 1700 THEN RETURN 'Oro';
-    ELSE RETURN 'Plata';
+        WHEN PrecioLibro < 1300 THEN
+            SET cantidad = 'Bronce';
+        WHEN PrecioLibro > 1700 THEN
+            SET cantidad = 'Oro';
+        ELSE
+            SET cantidad = 'Plata';
     END CASE;
+
+    RETURN cantidad;
 END$$
+
 DELIMITER ;
 
-#FUNCION QUE CALCULA LAS CUOTAS DE UNA COMPRA
+#SP QUE CALCULA LAS CUOTAS DE UNA COMPRA
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` FUNCTION `Cuotas`(PrecioLibro INT, CantidadCuotas INT) RETURNS float
+
+CREATE DEFINER=`Cacu`@`%` FUNCTION `Cuotas`(PrecioLibro INT, CantidadCuotas INT) RETURNS varchar(255)
     NO SQL
 BEGIN
-	DECLARE Precioxmes FLOAT;
-    SET Precioxmes = (PrecioLibro/CantidadCuotas);
-    RETURN Precioxmes;
+    DECLARE Precioxmes FLOAT;
+    DECLARE Resultado VARCHAR(255);
+
+    -- Calcular el precio por mes
+    SET Precioxmes = (PrecioLibro / CantidadCuotas);
+
+    -- Crear el texto descriptivo
+    SET Resultado = CONCAT(
+        'Cálculo de Cuotas Mensuales: ', 
+        'Esta función calcula el precio mensual dividiendo el precio del libro (', PrecioLibro, 
+        ') por la cantidad de cuotas (', CantidadCuotas, '). ', 
+        'El precio mensual es: ', FORMAT(Precioxmes, 2)
+    );
+
+    RETURN Resultado;
 END$$
+
 DELIMITER ;
 
 #SP PARA ORDENAR UN CAMPO ESPECÍFICO DE CUALQUIER TABLA
@@ -208,7 +232,7 @@ USE `bibliotech`;
 DROP procedure IF EXISTS `Ordenar_campo`;
 DELIMITER $$
 USE `bibliotech`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Ordenar_campo`(IN campo CHAR(20), IN Tipo_Ordenamiento ENUM('ASC', 'DESC'), IN Tabla VARCHAR(255))
+CREATE DEFINER=`Cacu`@`%` PROCEDURE `Ordenar_campo`(IN campo CHAR(20), IN Tipo_Ordenamiento ENUM('ASC', 'DESC'), IN Tabla VARCHAR(255))
 BEGIN
 	IF campo <> '' THEN
 		SET @ordenar = concat(' ORDER BY ', campo);
@@ -234,7 +258,7 @@ DROP procedure IF EXISTS `Planes_Menores`;
 
 DELIMITER $$
 USE `bibliotech`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Planes_Menores`()
+CREATE DEFINER=`Cacu`@`%` PROCEDURE `Planes_Menores`()
 BEGIN
 	CREATE TABLE IF NOT EXISTS Planes_Menores(
 		IdUsuario INT PRIMARY KEY,
@@ -291,23 +315,23 @@ VALUES (NOW(),USER(),NEW.IdVenta,NEW.Valor,'UPDATE');
 
 #CREAMOS EL PRIMER USUARIO
 
-CREATE USER 'Prueba1'@'localhost';
+CREATE USER 'Prueba1'@'%';
 #LE OTORGAMOS PERMISOS DE LECTURA
-GRANT SELECT ON *.* TO 'Prueba1'@'localhost';
+GRANT SELECT ON *.* TO 'Prueba1'@'%';
 #VERIFICAMOS LOS PERMISOS DEL USUARIO
-SHOW GRANTS FOR 'Prueba1'@'localhost';
+SHOW GRANTS FOR 'Prueba1'@'%';
 
 #CREAMOS EL SEGUNDO USUARIO
 
-CREATE USER 'Prueba2'@'localhost';
+CREATE USER 'Prueba2'@'%';
 #LE OTORGAMOS LOS PERMISOS DE LECTURA,INSERCION Y MODIFICACION
-GRANT SELECT, INSERT, UPDATE ON *.* TO 'Prueba2'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON *.* TO 'Prueba2'@'%';
 #VERIFICAMOS LOS PERMISOS DEL USUARIO
-SHOW GRANTS FOR 'Prueba2'@'localhost';
+SHOW GRANTS FOR 'Prueba2'@'%';
 
 #SE BORRA UN REGISTRO DE "DIMEMPLEADOS" Y LUEGO SE APLICA EL ROLLBACK PARA VOLVER ATRAS
 START TRANSACTION;
-DELETE FROM dimempleados WHERE IdEmpleados = 2;
+DELETE FROM factventas WHERE IdEmpleados = 2;
 ROLLBACK;
 
 #SE INSERTA UN REGISTRO EN "DIMEMPLEADOS" Y SE APLICA EL COMMIT PARA CONFIRMAR LA SENTENCIA
@@ -327,625 +351,3 @@ INSERT INTO bibliotech.dimlibros VALUES (17,'Bruja Blanca','Shelby Mahurin','Fan
 INSERT INTO bibliotech.dimlibros VALUES (18,'La Comunidad','Helene Flood','Novela Negra',2021,'Planeta',1100);
 INSERT INTO bibliotech.dimlibros VALUES (19,'Las Malas','Camila Sosa Villada','Novela Contemporanea',2019,'Tusquets',1178);
 SAVEPOINT LOTE8;
-#RELEASE SAVEPOINT LOTE4;
-
-
-/*BACKUP
-
-TABLAS INCLUIDAS: DimLibros,DimUsuarios,DimEmpleados,DimPlanes,DimFecha,FactVentas,comprasusuarios,empleadosat,gananciaplanes,planbronce,planusuarios,planes_menores,movimientos_libros,log_ventas,*\
-
-CREATE DATABASE  IF NOT EXISTS `bibliotech` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `bibliotech`;
--- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: bibliotech
--- ------------------------------------------------------
--- Server version	8.0.26
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Temporary view structure for view `comprasusuarios`
---
-
-DROP TABLE IF EXISTS `comprasusuarios`;
-/*!50001 DROP VIEW IF EXISTS `comprasusuarios`*/;
-SET @saved_cs_client     = @@character_set_client;
-/*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `comprasusuarios` AS SELECT 
- 1 AS `Venta`,
- 1 AS `Valor`,
- 1 AS `Nombre`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `dimempleados`
---
-
-DROP TABLE IF EXISTS `dimempleados`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `dimempleados` (
-  `IdEmpleados` int NOT NULL AUTO_INCREMENT,
-  `Nombre` varchar(255) NOT NULL,
-  `Email` varchar(255) NOT NULL,
-  `Cargo` varchar(255) NOT NULL,
-  `Telefono` bigint NOT NULL,
-  `Dirección` varchar(255) NOT NULL,
-  `Salario` bigint NOT NULL,
-  `DNI` bigint NOT NULL,
-  PRIMARY KEY (`IdEmpleados`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `dimempleados`
---
-
-LOCK TABLES `dimempleados` WRITE;
-/*!40000 ALTER TABLE `dimempleados` DISABLE KEYS */;
-INSERT INTO `dimempleados` VALUES (1,'Pamela_Trinidad','TrinidadTri22@gmail.com','Atencion_Al_cliente',1576230987,'Laprida_1111',52300,40987622),(2,'Marcos_Bustamante','Bustazeta@gmail.com','Desarrollador_Web',1174629972,'Simbrón_65',107100,37725776),(3,'Oscar_Luth','OscarL@gmail.com','Jefe_RR.HH.',1167259090,'Santa_Fe_552',159888,34978645),(4,'Javier_Rodriguez','JavierRodriguez21@gmail.com','Atencion_Al_cliente',1162678841,'Galvan_977',52300,43245579),(5,'Cristian_Martinez','Cristian@gmail.com','Desarrollador_Web',1164645278,'Artilleros_1602',107100,38653429),(6,'Carlos_Sosa','Carlossosa@yahoo.com','Técnico_Servidor',1166669982,'Iberá_2351',88200,37882962),(7,'Mariano_Bruschi','BruschiMatias@gmail.com','Atencion_Al_cliente',1186744812,'Escobar_1012',52300,41252062),(8,'Esteban_Rios','Este.rios@gmail.com','Supervisor',1185920982,'Cuenca_214',122000,37882921);
-/*!40000 ALTER TABLE `dimempleados` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `dimfecha`
---
-
-DROP TABLE IF EXISTS `dimfecha`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `dimfecha` (
-  `Fecha` date NOT NULL,
-  `Mes` int NOT NULL,
-  `NombreMes` text NOT NULL,
-  `Año` int NOT NULL,
-  `Semana` int NOT NULL,
-  `DiaSemana` text NOT NULL,
-  PRIMARY KEY (`Fecha`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `dimfecha`
---
-
-LOCK TABLES `dimfecha` WRITE;
-/*!40000 ALTER TABLE `dimfecha` DISABLE KEYS */;
-INSERT INTO `dimfecha` VALUES ('2021-05-01',5,'mayo',2021,17,'Sabado'),('2021-05-05',5,'Mayo',2021,17,'Miercoles'),('2021-05-06',5,'Mayo',2021,17,'Jueves'),('2021-06-11',6,'Junio',2021,23,'Viernes'),('2021-06-12',6,'Junio',2021,23,'Sábado'),('2021-06-19',6,'Junio',2021,24,'Sabado'),('2021-06-23',6,'Junio',2021,24,'Miercoles'),('2021-07-22',7,'Julio',2021,28,'Jueves'),('2021-08-08',8,'Agosto',2021,31,'Domingo'),('2021-08-12',8,'Agosto',2021,31,'Jueves'),('2021-08-29',8,'Agosto',2021,34,'Domingo'),('2021-09-08',9,'Septiembre',2021,35,'Miercoles'),('2021-09-09',9,'Septiembre',2021,35,'Jueves'),('2021-09-13',9,'Septiembre',2021,36,'Lunes');
-/*!40000 ALTER TABLE `dimfecha` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `dimlibros`
---
-
-DROP TABLE IF EXISTS `dimlibros`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `dimlibros` (
-  `IdLibros` int NOT NULL AUTO_INCREMENT,
-  `Titulos` varchar(255) NOT NULL,
-  `Autores` varchar(255) NOT NULL,
-  `Categoria` varchar(255) NOT NULL,
-  `Año` varchar(255) NOT NULL,
-  `Editorial` text NOT NULL,
-  `Precio` varchar(255) NOT NULL,
-  PRIMARY KEY (`IdLibros`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `dimlibros`
---
-
-LOCK TABLES `dimlibros` WRITE;
-/*!40000 ALTER TABLE `dimlibros` DISABLE KEYS */;
-INSERT INTO `dimlibros` VALUES (1,'Don Quijote de la Mancha','Miguel de Cervantes','Ficción histórica','1991','Anaya','2700'),(2,'Historias de Nueva Orleans','William Faulkner','Novela','1985','Alfaguara','1670'),(3,'El Principito','Antoine Saint-Exupery','Aventura','1996','Andina','1250'),(4,'El Principe','Maquiavelo','Politico','1995','S.M.','1125'),(5,'Diplomacia','Henry Kissinger','Politico','1997','S.M.','1750'),(6,'Los Windsor','Kitty Kelley','Biografias','1998','Plaza & Janes','1130'),(7,'El corazón de la piedra','José María García López','Novela','2013','Nocturna','2000'),(8,'Salmos de vísperas','Esteban Hernández Castelló','Religioso','2003','Obra social de Caja de Avila','1520'),(9,'La música en las catedrales españolas del Siglo de Oro','Robert Stevenson','Biografias','1993','Alianza Música','1950'),(10,'La polifonía clásica','Samuel Rubio','Musica','1956','Biblioteca \"la ciudad de Dios\"\", Real Monasterio de El Escorial\"','1400'),(11,'El psicoanalista','John Katzenbach','Novela','2002','Ediciones B','1300'),(12,'El Libro Negro del Programador','Rafael Gomez','Informatica','2017','Createspace','1200'),(13,'Que harias si no tuvieras miedo','Borja Vilaseca','Politica y Actualidad','2015','DeBolsillo','2300'),(14,'Agil mente','Estanislao Bachrach','Sociologia','2016','Sudamericana','3090'),(15,'Cuentos Completos','Ricardo Piglia','Literatura y ficcion','1967','Anagrama','1700');
-/*!40000 ALTER TABLE `dimlibros` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `AFT_INS_dimlibros` AFTER INSERT ON `dimlibros` FOR EACH ROW INSERT INTO `Movimientos_Libros` (Fecha,Usuario,Titulos,Autores,Precio,Tipo_Operacion)
-VALUES (NOW(),USER(),NEW.Titulos,NEW.Autores,NEW.Precio,'INSERT') */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `dimplanes`
---
-
-DROP TABLE IF EXISTS `dimplanes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `dimplanes` (
-  `IdPlanes` int NOT NULL AUTO_INCREMENT,
-  `NombrePlan` varchar(255) NOT NULL,
-  `Precio` decimal(10,2) DEFAULT NULL,
-  PRIMARY KEY (`IdPlanes`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `dimplanes`
---
-
-LOCK TABLES `dimplanes` WRITE;
-/*!40000 ALTER TABLE `dimplanes` DISABLE KEYS */;
-INSERT INTO `dimplanes` VALUES (1,'Oro',5000.00),(2,'Plata',4000.00),(3,'Bronce',1500.00);
-/*!40000 ALTER TABLE `dimplanes` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `dimusuarios`
---
-
-DROP TABLE IF EXISTS `dimusuarios`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `dimusuarios` (
-  `IdUsuarios` int NOT NULL AUTO_INCREMENT,
-  `Nombre` varchar(255) NOT NULL,
-  `Email` varchar(255) NOT NULL,
-  `Plan` varchar(255) NOT NULL,
-  `Telefono` bigint NOT NULL,
-  `Dirección` varchar(255) DEFAULT NULL,
-  `DNI` bigint NOT NULL,
-  PRIMARY KEY (`IdUsuarios`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `dimusuarios`
---
-
-LOCK TABLES `dimusuarios` WRITE;
-/*!40000 ALTER TABLE `dimusuarios` DISABLE KEYS */;
-INSERT INTO `dimusuarios` VALUES (1,'Carlos_Montana','CarlosM@gmail.com','Oro',1564642432,'Avenida_Segurola_1515',40200302),(2,'Mariano_Lopez','Marian@gmail.com','Oro',1564667092,'Paris_251',38887254),(3,'Fabiana_Mendez','Fabieta@outlook.com','Bronce',1164427291,'',43220951),(4,'Julian_Javian','Jujavi@gmail.com','Plata',1562098722,'Reconquista_614',33925001),(5,'Ignacio_Hott','IgnaH92@gmail.com','Plata',1156879206,'Chacabuco_991',39827521),(6,'Jorge_Pair','JorgeP@gmail.com','Oro',1564645519,'Avenida_Monte 221',33952286),(7,'Mariana_Gomez','MarianDian@gmail.com','Oro',1515628952,'Lisboa_512',38925992),(8,'Lucas_Kiter','LucasKt22@outlook.com','Bronce',1598962533,'Montiel_1952',40200700),(9,'Leopoldo_Mato','Leopoldo822@gmail.com','Bronce',1524864265,'Arregui_521',39254889),(10,'Matias_Martin','Martineano@gmail.com','Plata',1526789241,'Campana_999',38765243);
-/*!40000 ALTER TABLE `dimusuarios` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Temporary view structure for view `empleadosat`
---
-
-DROP TABLE IF EXISTS `empleadosat`;
-/*!50001 DROP VIEW IF EXISTS `empleadosat`*/;
-SET @saved_cs_client     = @@character_set_client;
-/*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `empleadosat` AS SELECT 
- 1 AS `Nombre`,
- 1 AS `Cargo`,
- 1 AS `Salario`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `factventas`
---
-
-DROP TABLE IF EXISTS `factventas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `factventas` (
-  `IdVenta` int NOT NULL AUTO_INCREMENT,
-  `IdLibros` int NOT NULL,
-  `Fecha` date NOT NULL,
-  `IdUsuarios` int NOT NULL,
-  `IdPlanes` int NOT NULL,
-  `Valor` decimal(10,2) NOT NULL,
-  `MedioPago` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`IdVenta`),
-  KEY `IdLibros` (`IdLibros`),
-  KEY `Fecha` (`Fecha`),
-  KEY `IdUsuarios` (`IdUsuarios`),
-  KEY `IdPlanes` (`IdPlanes`),
-  CONSTRAINT `factventas_ibfk_1` FOREIGN KEY (`IdLibros`) REFERENCES `dimlibros` (`IdLibros`),
-  CONSTRAINT `factventas_ibfk_2` FOREIGN KEY (`Fecha`) REFERENCES `dimfecha` (`Fecha`),
-  CONSTRAINT `factventas_ibfk_3` FOREIGN KEY (`IdUsuarios`) REFERENCES `dimusuarios` (`IdUsuarios`),
-  CONSTRAINT `factventas_ibfk_5` FOREIGN KEY (`IdPlanes`) REFERENCES `dimplanes` (`IdPlanes`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `factventas`
---
-
-LOCK TABLES `factventas` WRITE;
-/*!40000 ALTER TABLE `factventas` DISABLE KEYS */;
-INSERT INTO `factventas` VALUES (1,10,'2021-05-01',5,2,4000.00,'VisaDebito'),(2,1,'2021-08-08',4,2,4000.00,'MercadoPago'),(3,2,'2021-09-13',9,1,5000.00,'MercadoPago'),(4,3,'2021-06-19',3,3,1500.00,'VisaCredito'),(5,9,'2021-07-22',6,1,5000.00,'Mastercard'),(6,4,'2021-06-23',10,3,1500.00,'MercadoPago'),(7,5,'2021-06-11',8,3,1500.00,'MercadoPago'),(8,8,'2021-05-05',1,1,5000.00,'VisaCredito'),(9,6,'2021-08-29',7,1,5000.00,'MercadoPago'),(10,7,'2021-08-12',2,1,5000.00,'VisaDebito'),(13,8,'2021-12-12',11,3,1500.00,'Mercadopago');
-/*!40000 ALTER TABLE `factventas` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `BEF_UPD_factventas` BEFORE UPDATE ON `factventas` FOR EACH ROW INSERT INTO `LOG_Ventas` (Fecha,Usuario_Mod,IdVenta,Valor,Tipo_Operacion)
-VALUES (NOW(),USER(),NEW.IdVenta,NEW.Valor,'UPDATE') */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Temporary view structure for view `gananciaplanes`
---
-
-DROP TABLE IF EXISTS `gananciaplanes`;
-/*!50001 DROP VIEW IF EXISTS `gananciaplanes`*/;
-SET @saved_cs_client     = @@character_set_client;
-/*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `gananciaplanes` AS SELECT 
- 1 AS `IdPlanes`,
- 1 AS `NombrePlan`,
- 1 AS `ValorTotal`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `log_ventas`
---
-
-DROP TABLE IF EXISTS `log_ventas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `log_ventas` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `Fecha` datetime NOT NULL,
-  `Usuario_Mod` varchar(255) NOT NULL,
-  `IdVenta` int NOT NULL,
-  `Valor` decimal(10,2) NOT NULL,
-  `Tipo_Operacion` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `log_ventas`
---
-
-LOCK TABLES `log_ventas` WRITE;
-/*!40000 ALTER TABLE `log_ventas` DISABLE KEYS */;
-INSERT INTO `log_ventas` VALUES (1,'2021-12-16 11:58:57','root@localhost',13,1500.00,'UPDATE');
-/*!40000 ALTER TABLE `log_ventas` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `movimientos_libros`
---
-
-DROP TABLE IF EXISTS `movimientos_libros`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `movimientos_libros` (
-  `Id_Movimiento` int NOT NULL AUTO_INCREMENT,
-  `Fecha` datetime NOT NULL,
-  `Usuario` varchar(255) NOT NULL,
-  `Titulos` varchar(255) NOT NULL,
-  `Autores` varchar(255) NOT NULL,
-  `Precio` decimal(10,2) NOT NULL,
-  `Tipo_Operacion` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`Id_Movimiento`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `movimientos_libros`
---
-
-LOCK TABLES `movimientos_libros` WRITE;
-/*!40000 ALTER TABLE `movimientos_libros` DISABLE KEYS */;
-INSERT INTO `movimientos_libros` VALUES (1,'2021-12-16 11:34:21','root@localhost','El psicoanalista','John Katzenbach',1300.00,'INSERT'),(2,'2021-12-30 22:01:35','root@localhost','El Libro Negro del Programador','Rafael Gomez',1200.00,'INSERT'),(3,'2021-12-30 22:01:35','root@localhost','Que harias si no tuvieras miedo','Borja Vilaseca',2300.00,'INSERT'),(4,'2021-12-30 22:01:35','root@localhost','Agil mente','Estanislao Bachrach',3090.00,'INSERT'),(5,'2021-12-30 22:01:35','root@localhost','Cuentos Completos','Ricardo Piglia',1700.00,'INSERT');
-/*!40000 ALTER TABLE `movimientos_libros` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Temporary view structure for view `planbronce`
---
-
-DROP TABLE IF EXISTS `planbronce`;
-/*!50001 DROP VIEW IF EXISTS `planbronce`*/;
-SET @saved_cs_client     = @@character_set_client;
-/*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `planbronce` AS SELECT 
- 1 AS `IdVenta`,
- 1 AS `Valor`,
- 1 AS `MedioPago`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `planes_menores`
---
-
-DROP TABLE IF EXISTS `planes_menores`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `planes_menores` (
-  `IdUsuario` int NOT NULL,
-  `Nombre` varchar(255) DEFAULT NULL,
-  `Plan` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`IdUsuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `planes_menores`
---
-
-LOCK TABLES `planes_menores` WRITE;
-/*!40000 ALTER TABLE `planes_menores` DISABLE KEYS */;
-INSERT INTO `planes_menores` VALUES (3,'Fabiana_Mendez','Bronce'),(4,'Julian_Javian','Plata'),(5,'Ignacio_Hott','Plata'),(8,'Lucas_Kiter','Bronce'),(9,'Leopoldo_Mato','Bronce'),(10,'Matias_Martin','Plata');
-/*!40000 ALTER TABLE `planes_menores` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Temporary view structure for view `planusuarios`
---
-
-DROP TABLE IF EXISTS `planusuarios`;
-/*!50001 DROP VIEW IF EXISTS `planusuarios`*/;
-SET @saved_cs_client     = @@character_set_client;
-/*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `planusuarios` AS SELECT 
- 1 AS `Nombre`,
- 1 AS `Plan`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping routines for database 'bibliotech'
---
-/*!50003 DROP FUNCTION IF EXISTS `Cuotas` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `Cuotas`(PrecioLibro INT, CantidadCuotas INT) RETURNS float
-    NO SQL
-BEGIN
-	DECLARE Precioxmes FLOAT;
-    SET Precioxmes = (PrecioLibro/CantidadCuotas);
-    RETURN Precioxmes;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `PlanLibro` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` FUNCTION `PlanLibro`(PrecioLibro INT) RETURNS varchar(255) CHARSET utf8mb4
-    NO SQL
-BEGIN
-DECLARE cantidad VARCHAR(255);
-    CASE 
-    WHEN PrecioLibro < 1300 THEN RETURN 'Bronce';
-    WHEN PrecioLibro > 1700 THEN RETURN 'Oro';
-    ELSE RETURN 'Plata';
-    END CASE;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `Ordenar_campo` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Ordenar_campo`(IN campo CHAR(20), IN Tipo_Ordenamiento ENUM('ASC', 'DESC'), IN Tabla VARCHAR(255))
-BEGIN
-	IF campo <> '' THEN
-		SET @ordenar = concat(' ORDER BY ', campo);
-	ELSE
-		SET @ordenar = '';
-	END IF;
-	IF Tipo_Ordenamiento <> ' ' THEN
-    SET @tipo = CONCAT(' ', tipo_ordenamiento);
-		ELSE 
-        SET @tipo = '';
-    END IF;
-SET @clausula = CONCAT('SELECT * FROM ',Tabla,@ordenar, @tipo);
-PREPARE ejecutarSQL FROM @clausula;
-EXECUTE ejecutarSQL;
-DEALLOCATE PREPARE ejecutarSQL;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `Planes_Menores` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Planes_Menores`()
-BEGIN
-	CREATE TABLE IF NOT EXISTS Planes_Menores(
-		IdUsuario INT PRIMARY KEY,
-        Nombre VARCHAR(255),
-        Plan VARCHAR(255));
-	TRUNCATE Planes_Menores;
-    INSERT INTO Planes_Menores(IdUsuario,Nombre,Plan)
-    SELECT IdUsuarios,Nombre,Plan FROM dimusuarios
-    WHERE Plan = 'Bronce' OR Plan= 'Plata'
-	ORDER BY 'Plan' ASC;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `VentasxMes` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `VentasxMes`()
-BEGIN
-	CREATE TABLE IF NOT EXISTS VentasxMes(
-		Cantidad INT PRIMARY KEY,
-        NombreMes VARCHAR(255));
-	TRUNCATE VentasxMes;
-    INSERT INTO VentasxMes(Cantidad, NombreMes)
-    SELECT COUNT(NombreMes) AS Cantidad, NombreMes FROM dimfecha
-    GROUP BY NombreMes;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Final view structure for view `comprasusuarios`
---
-
-/*!50001 DROP VIEW IF EXISTS `comprasusuarios`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `comprasusuarios` AS select `v`.`IdVenta` AS `Venta`,`v`.`Valor` AS `Valor`,`u`.`Nombre` AS `Nombre` from (`factventas` `v` join `dimusuarios` `u` on((`u`.`IdUsuarios` = `v`.`IdUsuarios`))) order by `v`.`Valor` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `empleadosat`
---
-
-/*!50001 DROP VIEW IF EXISTS `empleadosat`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `empleadosat` AS select `dimempleados`.`Nombre` AS `Nombre`,`dimempleados`.`Cargo` AS `Cargo`,`dimempleados`.`Salario` AS `Salario` from `dimempleados` where (`dimempleados`.`Salario` = 52300) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `gananciaplanes`
---
-
-/*!50001 DROP VIEW IF EXISTS `gananciaplanes`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `gananciaplanes` AS select `v`.`IdPlanes` AS `IdPlanes`,`p`.`NombrePlan` AS `NombrePlan`,sum(`v`.`Valor`) AS `ValorTotal` from (`factventas` `v` join `dimplanes` `p` on((`v`.`IdPlanes` = `p`.`IdPlanes`))) group by `v`.`Valor` order by `ValorTotal` desc */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `planbronce`
---
-
-/*!50001 DROP VIEW IF EXISTS `planbronce`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `planbronce` AS select `factventas`.`IdVenta` AS `IdVenta`,`factventas`.`Valor` AS `Valor`,`factventas`.`MedioPago` AS `MedioPago` from `factventas` where (`factventas`.`Valor` = 1500) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `planusuarios`
---
-
-/*!50001 DROP VIEW IF EXISTS `planusuarios`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `planusuarios` AS select `dimusuarios`.`Nombre` AS `Nombre`,`dimusuarios`.`Plan` AS `Plan` from `dimusuarios` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2022-01-11 18:41:44
